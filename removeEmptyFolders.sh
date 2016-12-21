@@ -1,10 +1,20 @@
 #!/bin/bash
+#This script removes empty folders in some folder.
+
+#Path to the folder.
 path=$1
+
+#Verify if path is entered.
 if [ ! $path ];
     then echo "Enter path"
          exit 1
+
+#Verify if path is correct.
 else if cd $path;
      then     
+
+           #Finding all empty folders in current folder.
+           #And delete if such are exists.
            emptyfolders="$(find . -type d -empty)"
            if [[ $emptyfolders ]];
            then
