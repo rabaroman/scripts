@@ -1,7 +1,7 @@
 #!/bin/bash
 name=$1
 path=$2
-if [ -z $name ] || [ -z $path ];
+if [ ! $name ] || [ ! $path ];
     then echo "Can't create folder. Enter all parameters"
          exit 1
 else if cd $path;
