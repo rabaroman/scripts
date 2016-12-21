@@ -1,31 +1,43 @@
 #!/bin/bash
+#This script adds data to table in DB.
+
+#Database name
 dbname=$1
+
+#Table name
 tbname=$2
-username=lv207
-if [ -z $dbname ] || [ -z $tbname ];
+
+#SQL querries
+sql_use="use '${dbname}';"
+sql_select="SELECT * FROM ${dbname}.${tbname};"
+sql_insert="INSERT INTO ${dbname}.${tbname} (name,login,password,age)
+            VALUES ('Oleg','iva','qwerty','4');"
+sql_count="SELECT COUNT(*) FROM ${dbname}.${tbname};"
+
+#Verify if input parametrs are existing
+if [ ! $dbname ] || [ ! $tbname ];
     then echo "Can't add data. Enter all parameters"
          exit 1
 fi
-if ! mysql -u $username --password=$PASS -e "use ${dbname};" 
+
+#Verify if database is valid
+if ! mysql --defaults-extra-file=config.cnf -e "$sql_use" 
   then echo "Database doesn't exist"
        exit 1   
 fi
 
-if ! mysql -u $username --password=$PASS -e "use ${dbname};
-   SELECT COUNT(*) FROM ${tbname}" 
+#Verify is table is in DB
+echo "Old table"
+if ! mysql --defaults-extra-file=config.cnf -e "$sql_count"
    then echo "Table doesn't exist"
-        exit 1
+        exit 1 
 fi
 
- if  mysql -u $username --password=$PASS -e "use ${dbname}; 
-       INSERT INTO ${tbname} (name,login,password,age)
-       VALUES ('Stepan','iva','qwerty',51);
-       INSERT INTO ${tbname} (name,login,password,age)
-       VALUES ('Petro','iva','qwerty',34);
-       SELECT * FROM ${tbname};"
-    then echo "Data is added to the table ${tbname}"
-         exit 0
-else echo "Data isn't add to the table ${tbname}"
-     exit 1
-fi
+#Add data to table
+for i in {1..10}
+  do 
+     mysql --defaults-extra-file=config.cnf -e "$sql_insert"
+  done
+echo "Table is updated"
 
+mysql --defaults-extra-file=config.cnf -e "$sql_count"
